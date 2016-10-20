@@ -907,6 +907,14 @@ public class ContactAccessorSdk5 extends ContactAccessor {
             im.put("type", getImType(Integer.parseInt(cursor.getString(cursor.getColumnIndex(CommonDataKinds.Im.PROTOCOL)))));
         } catch (JSONException e) {
             LOG.e(LOG_TAG, e.getMessage(), e);
+        // CB-11206: Set custom type if 'parseInt' throws exception
+        } catch (NumberFormatException formatException) {
+            LOG.e(LOG_TAG, formatException.getMessage(), formatException);
+            try {
+                im.put("type", getImType(CommonDataKinds.Im.PROTOCOL_CUSTOM));
+            } catch(JSONException ex) {
+                LOG.e(LOG_TAG, ex.getMessage(), ex);
+            }
         }
         return im;
     }
